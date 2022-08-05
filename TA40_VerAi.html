@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+    <style>
+        table,th,td {
+          border : 1px solid black;
+          border-collapse: collapse;
+        }
+        th,td {
+          padding: 5px;
+        }
+    </style>
+    <meta charset="utf-8" />
+    <!-- Load library -->
+    <script src="https://d3js.org/d3.v4.js"></script>
+    <script src="https://d3js.org/d3-scale-chromatic.v1.min.js"></script>
+    <script src="https://unpkg.com/leaflet@1.3.4/dist/leaflet.js" integrity="sha512-nMMmRyTVoLYqjP9hrbed9S+FzjZHW5gY1TWCHA5ckwXZBadntCNs8kEqAWdrb9O7rxbCaA4lKTIWjDXZxflOcA==" crossorigin=""></script>
+    <script src="https://cdn.jsdelivr.net/gh/holtzy/D3-graph-gallery@master/LIB/d3.layout.cloud.js"></script>
+    <head>
+        <title>TA 40</title>
+        <link href="https://fonts.googleapis.com/css?family=Saira+Extra+Condensed:500,700" rel="stylesheet" type="text/css" />
+        <link href="https://fonts.googleapis.com/css?family=Muli:400,400i,800,800i" rel="stylesheet" type="text/css" />
+        <link href="css/htmlstyles.css" rel="stylesheet" />
+        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.3.4/dist/leaflet.css" integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA==" crossorigin=""/>
+        <XML ID="uvloc" SRC="https://uvdata.arpansa.gov.au/xml/uvvalues.xml"></XML>
+    </head>
+
+
+    <body id="page-top">
+        <!-- Navigation-->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top" id="sideNav">
+            <a class="navbar-brand js-scroll-trigger" href="#page-top"
+            ><button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav">
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#Main">Main</a></li>
+                    <li class="nav-item"><a class="nav-link js-scroll-trigger" href="#Education">Education</a></li>
+                </ul>
+            </div>
+        </nav>
+
+        <!-- Page Content-->
+        <div class="container-fluid p-0">
+            <!-- Main-->
+            <section class="resume-section" id="Main">
+                <div class="resume-section-content">
+                <h1 class="mb-0">TA-40 <span class="text-primary">Project</span> SunCare </h1>
+                <br>
+                <div class="subheading mb-5">
+                  Cassandra Cleever 25980971
+                  <br> Yanxi Jin 29258847
+                  <br> Di Wu 32005679
+                  <br> Nabilah Anuwar 31282016
+                  <br> Peiyuan Xue 27925013
+                  <br> Tutor: Sameera Patterson
+
+               
+                </div>
+                <div class="subheading mb-5"style="width:300px; height:auto; float:left; display:inline">Mel UV intensity
+                <div id="mapid"></div>
+                  <style>
+                  #mapid { height: 400px; width:700px;}
+                  </style>
+                </div>
+                <!-- <script type='text/javascript' src='Map/map.js'></script> -->
+
+                <!-- Insert Choropleth?-->
+                <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+                <script type="text/javascript">
+                    google.charts.load('current', {
+                        'packages': ['geochart'],
+                    });
+                    google.charts.setOnLoadCallback(drawRegionsMap);
+
+                    function drawRegionsMap() {
+                        var data = google.visualization.arrayToDataTable([
+                            ['Country', 'Popularity'],
+                            ['Germany', 200],
+                            ['United States', 300],
+                            ['Brazil', 400],
+                            ['Canada', 500],
+                            ['France', 600],
+                            ['RU', 700]
+                        ]);
+
+                        var options = { displayMode: 'regions' };
+
+                        var chart = new google.visualization.GeoChart(document.getElementById('regions_div'));
+
+                        chart.draw(data, options);
+                    }
+                </script>
+                <div id="regions_div" style="width: 900px; height: 500px;"></div>
+
+                <!--XML Data View-->
+
+                <button type="button" onclick="loadXMLDoc()">Update Forecast</button>
+                <br><br>
+                <table id="demo"></table>
+
+                <script>
+                function loadXMLDoc() {
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                    if (this.readyState == 4 && this.status == 200) {
+                    myFunction(this);
+                    }
+                };
+                xmlhttp.open("GET", "https://uvdata.arpansa.gov.au/xml/uvvalues.xml", true);
+                xmlhttp.send();
+                }
+
+                var xmlhttp = new XMLHttpRequest();
+                xmlhttp.onreadystatechange = function() {
+                if (this.readyState == 4 && this.status == 200) {
+                    myFunction(this);
+                }
+                };
+                xmlhttp.open("GET", "https://uvdata.arpansa.gov.au/xml/uvvalues.xml", true);
+                xmlhttp.send();
+                
+                function myFunction(xml) {
+                var i;
+                var xmlDoc = xml.responseXML;
+                var table="<tr><th>Location</th><th>UV</th><th>Time</th></tr>";
+                var x = xmlDoc.getElementsByTagName("location");
+                for (i = 0; i <x.length; i++) { 
+                    table += "<tr><td>" +
+                    x[i].getAttribute('id') +
+                    "</td><td>" +
+                    x[i].getElementsByTagName("index")[0].childNodes[0].nodeValue +
+                    "</td><td>" +
+                    x[i].getElementsByTagName("time")[0].childNodes[0].nodeValue +
+                    "</td></tr>";
+                }
+                document.getElementById("demo").innerHTML = table;
+                }
+                </script>
+
+                <include src="./r/testmap.html"></include>
+
+            </section>
+            <hr class="m-0" />
+            
+            
+             <!-- Education-->
+             <section class="resume-section" id="Education">
+                <div class="resume-section-content">
+                    <h2 class="mb-5">Education</h2>
+                    <div class="d-flex flex-column flex-md-row justify-content-between mb-5">
+                        <div class="flex-grow-1">
+                            <p class="lead mb-5">
+                                The trend of UV intensity in 10 years 
+                            </p>
+                            <div class="flourish-embed flourish-bar-chart-race" data-src="visualisation/10283084"><script src="https://public.flourish.studio/resources/embed.js"></script></div>
+                    </div>
+
+                </div>
+  
+            </section>
+            <hr class="m-0" />
+
+        </div>
+        <!-- Bootstrap core JS by smooth move-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.bundle.min.js"></script>
+        <!-- Third party plugin JS by button click-->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-easing/1.4.1/jquery.easing.min.js"></script>
+        <!-- Core theme JS-->
+        <script src="js/scripts.js"></script>
+
+
+
+    </body>
+</html>

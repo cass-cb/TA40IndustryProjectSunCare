@@ -1,0 +1,22 @@
+---
+title: "UV Forecast Map"
+output: html_notebook
+---
+
+# libraries
+
+```{r}
+library(leaflet)
+library(htmlwidgets)
+```
+
+# test
+```{r}
+m <- leaflet(data.frame(lat = 55.71654, lng = 12.47484))
+m <-  addCircles(m, popup = "testpopup")
+m <-  addTiles(m)
+m
+
+saveWidget(m, file="testmap.html", selfcontained = TRUE)
+```
+
