@@ -4,11 +4,19 @@ output: html_notebook
 ---
 
 # libraries
-
 ```{r}
+library(rgdal)
 library(leaflet)
 library(htmlwidgets)
 ```
+
+# set variable for australian map
+```{r}
+aus_map <- readOGR(dsn=paste0(getwd(),"/data2"), 
+                   layer="TM_WORLD_BORDERS_SIMPL-0.3.shp"
+                   )
+```
+
 
 # test
 ```{r}
@@ -19,4 +27,10 @@ m
 
 saveWidget(m, file="testmap.html", selfcontained = TRUE)
 ```
+
+```{r}
+?getwd
+```
+
+
 
